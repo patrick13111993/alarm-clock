@@ -11,8 +11,14 @@ public class View implements Observer {
     
     public View(Model model) {
         JFrame frame = new JFrame();
+        Container contentPane = frame.getContentPane();
+        contentPane.setLayout(new BorderLayout());
+        JButton aboutButton = new JButton("About");
+        aboutButton.setPreferredSize(new Dimension(200, 100));
         panel = new ClockPanel(model);
-        frame.setContentPane(panel);
+        contentPane.add(panel, BorderLayout.PAGE_START);
+        contentPane.add(aboutButton, BorderLayout.PAGE_END);
+        frame.setContentPane(contentPane);
         frame.setTitle("Java Clock");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
