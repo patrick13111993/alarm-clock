@@ -11,14 +11,11 @@ public class View implements Observer {
     
     public View(Model model) {
         JFrame frame = new JFrame();
+        frame.setJMenuBar(createMenuBar());
         Container contentPane = frame.getContentPane();
         contentPane.setLayout(new BorderLayout());
         
-//      about button
-        JButton aboutButton = new JButton("About");
-        aboutButton.setPreferredSize(new Dimension(200, 100));
-        AboutButtonHandler abh = new AboutButtonHandler();
-        aboutButton.addActionListener(abh);
+        JButton aboutButton = createAboutButton();
         
         panel = new ClockPanel(model);
         contentPane.add(panel, BorderLayout.PAGE_START);
@@ -33,5 +30,25 @@ public class View implements Observer {
     
     public void update(Observable o, Object arg) {
         panel.repaint();
+    }
+    
+    public JButton createAboutButton() {
+        JButton aboutButton = new JButton("About");
+        aboutButton.setPreferredSize(new Dimension(200, 100));
+        AboutButtonHandler abh = new AboutButtonHandler();
+        aboutButton.addActionListener(abh);
+        return aboutButton;
+    }
+    
+    public JMenuBar createMenuBar() { 
+        JMenuBar menuBar = new JMenuBar();
+        JMenu clockMenu = new JMenu("Clock");
+        JMenuItem clockItem = new JMenuItem("About");
+        AboutButtonHandler abh = new AboutButtonHandler();
+        
+        clockItem.addActionListener(abh);
+        clockMenu.add(clockItem);
+        menuBar.add(clockMenu);
+        return menuBar;
     }
 }
