@@ -9,11 +9,12 @@ public class Controller {
     Timer timer;
     
     Model model;
-    View view;
+    AnalogView analogView;
+    DigitalView digitalView;
     
-    public Controller(Model m, View v) {
+    public Controller(Model m, AnalogView av) {
         model = m;
-        view = v;
+        analogView = av;
         
         listener = new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -23,5 +24,23 @@ public class Controller {
         
         timer = new Timer(100, listener);
         timer.start();
+        
+        
+    }
+    
+    public Controller(Model m, DigitalView dv) {
+        model = m;
+        digitalView = dv;
+        
+        listener = new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                model.update();
+            }
+        };
+        
+        timer = new Timer(100, listener);
+        timer.start();
+        
+        
     }
 }
