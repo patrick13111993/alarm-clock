@@ -1,25 +1,40 @@
 package alarmclock;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.swing.*;
 import java.util.Observer;
 import java.util.Observable;
 
-public class View implements Observer {
+public class View {
     
-    ClockPanel panel;
+    Boolean analog = true;
+    Model model;
     
     public View(Model model) {
+        this.model = model;
+        createFrame(model);        
+    }
+    
+    public void createFrame(Model model) {
         JFrame frame = new JFrame();
         frame.setJMenuBar(createMenuBar());
         Container contentPane = frame.getContentPane();
         contentPane.setLayout(new BorderLayout());
         
-        JButton aboutButton = createAboutButton();
-        
-        panel = new ClockPanel(model);
-        contentPane.add(panel, BorderLayout.PAGE_START);
-        contentPane.add(aboutButton, BorderLayout.PAGE_END);
+//        JButton aboutButton = createAboutButton();
+        if (analog) {
+            AnalogClockPanel analogpanel = new AnalogClockPanel(model);
+            model.addObserver(analogpanel);
+            contentPane.add(analogpanel, BorderLayout.CENTER);
+        } else {
+            DigitalClockPanel digitalpanel = new DigitalClockPanel(model);
+            model.addObserver(digitalpanel);
+            contentPane.add(digitalpanel, BorderLayout.CENTER);        
+        }
+
+//        contentPane.add(aboutButton, BorderLayout.PAGE_END);
         
         frame.setContentPane(contentPane);
         frame.setTitle("Java Clock");
@@ -28,27 +43,68 @@ public class View implements Observer {
         frame.setVisible(true);
     }
     
-    public void update(Observable o, Object arg) {
-        panel.repaint();
-    }
-    
-    public JButton createAboutButton() {
-        JButton aboutButton = new JButton("About");
-        aboutButton.setPreferredSize(new Dimension(200, 100));
-        AboutButtonHandler abh = new AboutButtonHandler();
-        aboutButton.addActionListener(abh);
-        return aboutButton;
-    }
-    
     public JMenuBar createMenuBar() { 
         JMenuBar menuBar = new JMenuBar();
         JMenu clockMenu = new JMenu("Clock");
-        JMenuItem clockItem = new JMenuItem("About");
+        
+        JMenuItem menuAbout = new JMenuItem("About");
+        JMenuItem analogButton = createAnalogButton();
+        JMenuItem digitalButton = createDigitalButton();
+        
         AboutButtonHandler abh = new AboutButtonHandler();
         
-        clockItem.addActionListener(abh);
-        clockMenu.add(clockItem);
+        ButtonGroup buttonGroup = new ButtonGroup();
+        buttonGroup.add(analogButton);
+        buttonGroup.add(digitalButton);
+        
+        menuAbout.addActionListener(abh);              
+        
+        clockMenu.add(menuAbout);
+        clockMenu.add(analogButton);
+        clockMenu.add(digitalButton);
         menuBar.add(clockMenu);
         return menuBar;
     }
-}
+    
+    public JMenuItem createAnalogButton() {
+        JMenuItem analogButton = new JMenuItem("Analog");
+        analogButton.setPreferredSize(new Dimension(80, 40));
+        NewClockMenuItemHandler nch = new NewClockMenuItemHandler();
+        analogButton.addActionListener(nch);
+        return analogButton;
+    }
+    
+    public JMenuItem createDigitalButton() {
+        JMenuItem digitalButton = new JMenuItem("Digital");
+        digitalButton.setPreferredSize(new Dimension(80, 40));
+        NewClockMenuItemHandler nch = new NewClockMenuItemHandler();
+        digitalButton.addActionListener(nch);
+        return digitalButton;
+    }
+    
+    class NewClockMenuItemHandler implements ActionListener  {
+
+    @Override
+    public void actionPerformed(ActionEvent event) {
+        if(event.getActionCommand()=="Analog") {
+            View.this.analog = true;
+        } else {
+            View.this.analog = false;
+        }
+        System.out.println(event);
+        System.out.println(View.this.analog);
+        View.this.createFrame(model);
+        }  
+    } 
+    
+    
+//    public JButton createAboutButton() {
+//        JButton aboutButton = new JButton("About");
+//        aboutButton.setPreferredSize(new Dimension(200, 100));
+//        AboutButtonHandler abh = new AboutButtonHandler();
+//        aboutButton.addActionListener(abh);
+//        return aboutButton;
+//    }
+}  
+
+

@@ -8,7 +8,7 @@ import java.util.Observable;
 import java.util.Observer;
 import javax.swing.*;
 
-public class AnalogClockPanel extends ClockPanel implements Observer {
+public class AnalogClockPanel extends ClockPanel {
     
     Model model;
     
@@ -87,10 +87,6 @@ public class AnalogClockPanel extends ClockPanel implements Observer {
         x1 = x0 + radius * Math.cos(theta);
         y1 = y0 - radius * Math.sin(theta);
         gg.draw(new Line2D.Double(x0, y0, x1, y1));
-    }
-    
-    public void setInvisible() {
-        this.repaint();
     }
 
     @Override

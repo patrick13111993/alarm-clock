@@ -7,9 +7,8 @@ public class Clock {
     
     public static void main(String[] args) {
         Model model = new Model();
-        AnalogView analogView = new AnalogView(model);
-        DigitalView digitalView = new DigitalView(model);     
+        View view = new View(model);    
         
-        Controller controller = new Controller(model, analogView); 
+        Controller controller = new Controller(model, view); 
     }
 }

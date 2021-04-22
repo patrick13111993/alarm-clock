@@ -17,7 +17,7 @@ import javax.swing.*;
  *
  * @author patrick
  */
-public class DigitalClockPanel extends ClockPanel implements Observer {
+public class DigitalClockPanel extends ClockPanel {
     
     Model model;
     
@@ -45,7 +45,7 @@ public class DigitalClockPanel extends ClockPanel implements Observer {
         Font clockFont = new Font("LCD", Font.BOLD, 48);
         gg.setFont(clockFont);
         String time = (hour + ":" + minute + ":" + second);
-        gg.drawString(time,80,64); 
+        gg.drawString(time,1,64); 
     }
 
     @Override
