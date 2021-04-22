@@ -4,8 +4,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.*;
-import java.util.Observer;
-import java.util.Observable;
 
 public class View {
     
@@ -24,6 +22,10 @@ public class View {
         contentPane.setLayout(new BorderLayout());
         
 //        JButton aboutButton = createAboutButton();
+        DateDisplay datedisplay = new DateDisplay(model);
+        model.addObserver(datedisplay);
+        contentPane.add(datedisplay, BorderLayout.PAGE_END);
+        
         if (analog) {
             AnalogClockPanel analogpanel = new AnalogClockPanel(model);
             model.addObserver(analogpanel);
@@ -91,8 +93,6 @@ public class View {
         } else {
             View.this.analog = false;
         }
-        System.out.println(event);
-        System.out.println(View.this.analog);
         View.this.createFrame(model);
         }  
     } 
