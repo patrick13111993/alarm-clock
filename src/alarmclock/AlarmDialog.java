@@ -9,6 +9,8 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import javax.swing.*;
@@ -20,6 +22,7 @@ public class AlarmDialog extends JDialog implements ActionListener, PropertyChan
     private View parent;
 
     private JOptionPane optionPane;
+    private JSpinner spinner;
 
     private String btnString1 = "OK";
     private String btnString2 = "Cancel";
@@ -35,16 +38,13 @@ public class AlarmDialog extends JDialog implements ActionListener, PropertyChan
         
 //      Source: https://stackoverflow.com/questions/21960236/jspinner-time-picker-model-editing  
         Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, 24);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 0);
 
         SpinnerDateModel model = new SpinnerDateModel();
         model.setValue(calendar.getTime());
 
-        JSpinner spinner = new JSpinner(model);
+        spinner = new JSpinner(model);
 
-        JSpinner.DateEditor editor = new JSpinner.DateEditor(spinner, "HH:mm:ss");
+        JSpinner.DateEditor editor = new JSpinner.DateEditor(spinner, "yyyy-MM-dd HH:mm:ss");
         DateFormatter formatter = (DateFormatter)editor.getTextField().getFormatter();
         formatter.setAllowsInvalid(false);
         formatter.setOverwriteMode(true);
@@ -108,12 +108,16 @@ public class AlarmDialog extends JDialog implements ActionListener, PropertyChan
                     JOptionPane.UNINITIALIZED_VALUE);
 
             if (btnString1.equals(value)) {
+                DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                String dateString = dateFormat.format(spinner.getValue());
+                Date date = (Date)spinner.getValue();
                 JOptionPane.showMessageDialog(
                 AlarmDialog.this,
-                "Alarm set for:",
-                String.valueOf(value),
+                "Alarm set for: " + dateString,
+                "Alarm set",
                 JOptionPane.INFORMATION_MESSAGE);
-                setVisible(false);
+                AlarmTimer timer = new AlarmTimer(parent.model, date, this);
+                timer.setVisible(true);
             }
              else { //user closed dialog or clicked cancel
                 setVisible(false);

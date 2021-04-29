@@ -31,12 +31,6 @@ public class DigitalClockPanel extends ClockPanel {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         
-//        String[] timeArray = {String.valueOf(model.hour), String.valueOf(model.minute), String.valueOf(model.second)};
-//        for (String number : timeArray) {
-//            if(number.length() == 1) {
-//                number = "0" + number;
-//            }
-//        }
         String hour = String.format("%02d", model.hour);
         String minute = String.format("%02d", model.minute);
         String second = String.format("%02d", model.second);
