@@ -17,7 +17,7 @@ public class View {
     
     public void createFrame(Model model) {
         JFrame frame = new JFrame();
-        frame.setJMenuBar(createMenuBar());
+        frame.setJMenuBar(createMenuBar(frame));
         Container contentPane = frame.getContentPane();
         contentPane.setLayout(new BorderLayout());
         
@@ -45,25 +45,29 @@ public class View {
         frame.setVisible(true);
     }
     
-    public JMenuBar createMenuBar() { 
+    public JMenuBar createMenuBar(JFrame frame) { 
         JMenuBar menuBar = new JMenuBar();
         JMenu clockMenu = new JMenu("Clock");
         
         JMenuItem menuAbout = new JMenuItem("About");
+        JMenuItem menuAlarm = new JMenuItem("Set Alarm");
         JMenuItem analogButton = createAnalogButton();
         JMenuItem digitalButton = createDigitalButton();
         
         AboutButtonHandler abh = new AboutButtonHandler();
+        AlarmButtonHandler albh = new AlarmButtonHandler(frame, this);
         
         ButtonGroup buttonGroup = new ButtonGroup();
         buttonGroup.add(analogButton);
         buttonGroup.add(digitalButton);
         
-        menuAbout.addActionListener(abh);              
+        menuAbout.addActionListener(abh); 
+        menuAlarm.addActionListener(albh);
         
         clockMenu.add(menuAbout);
         clockMenu.add(analogButton);
         clockMenu.add(digitalButton);
+        clockMenu.add(menuAlarm);
         menuBar.add(clockMenu);
         return menuBar;
     }
