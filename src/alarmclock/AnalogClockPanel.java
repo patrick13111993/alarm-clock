@@ -23,7 +23,7 @@ public class AnalogClockPanel extends ClockPanel {
         super.paintComponent(g);
         
         Rectangle bounds = getBounds();
-        //System.out.println(bounds);
+
         
         Graphics2D gg = (Graphics2D) g;
         int x0 = bounds.width / 2;

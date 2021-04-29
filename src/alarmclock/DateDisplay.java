@@ -35,7 +35,6 @@ public class DateDisplay extends JPanel implements Observer {
         
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         String today = df.format(model.datetime);
-        System.out.println(today);
         
         Graphics2D gg = (Graphics2D) g;
         Font clockFont = new Font("Sans Serif", Font.BOLD, 32);

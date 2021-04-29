@@ -28,9 +28,9 @@ public class AlarmDialog extends JDialog implements ActionListener, PropertyChan
     private String btnString2 = "Cancel";
 
 //    Adapted from: https://docs.oracle.com/javase/tutorial/uiswing/examples/components/DialogDemoProject/src/components/CustomDialog.java
-    public AlarmDialog(Frame aFrame, View parent) {
+    public AlarmDialog(Frame aFrame, View p) {
         super(aFrame, true);
-        parent = parent;
+        parent = p;
 
         setTitle("Set Alarm");
        
@@ -97,7 +97,6 @@ public class AlarmDialog extends JDialog implements ActionListener, PropertyChan
          && (JOptionPane.VALUE_PROPERTY.equals(prop) ||
              JOptionPane.INPUT_VALUE_PROPERTY.equals(prop))) {
             Object value = optionPane.getValue();
-            System.out.println(value);
 
             if (value == JOptionPane.UNINITIALIZED_VALUE) {
                 //ignore reset
@@ -116,7 +115,8 @@ public class AlarmDialog extends JDialog implements ActionListener, PropertyChan
                 "Alarm set for: " + dateString,
                 "Alarm set",
                 JOptionPane.INFORMATION_MESSAGE);
-                AlarmTimer timer = new AlarmTimer(parent.model, date, this);
+                AlarmTimer timer = new AlarmTimer(date, parent);
+                parent.model.addObserver(timer);
                 timer.setVisible(true);
             }
              else { //user closed dialog or clicked cancel
