@@ -110,11 +110,13 @@ public class AlarmDialog extends JDialog implements ActionListener, PropertyChan
                 DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 String dateString = dateFormat.format(spinner.getValue());
                 Date date = (Date)spinner.getValue();
+                
                 JOptionPane.showMessageDialog(
                 AlarmDialog.this,
                 "Alarm set for: " + dateString,
                 "Alarm set",
                 JOptionPane.INFORMATION_MESSAGE);
+                
                 AlarmTimer timer = new AlarmTimer(date, parent);
                 parent.model.addObserver(timer);
                 timer.setVisible(true);

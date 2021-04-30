@@ -10,15 +10,11 @@ import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Window;
 import java.util.Date;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.Timer;
-import java.util.TimerTask;
 import javax.swing.*;
 
 
@@ -30,7 +26,7 @@ public class AlarmTimer extends JPanel implements Observer {
     
     public AlarmTimer(Date date, View parent) {
         model = parent.model;
-        setPreferredSize(new Dimension(200, 200));
+        setPreferredSize(new Dimension(250, 250));
         setBackground(Color.white);
         Date now = model.datetime;
         seconds = (date.getTime()-now.getTime())/1000;
@@ -40,22 +36,21 @@ public class AlarmTimer extends JPanel implements Observer {
         contentPane.setLayout(new BorderLayout());
         
         contentPane.add(this);
-        
         frame.setContentPane(contentPane);
         frame.setTitle("Alarm");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);
-        seconds -=1;
-        System.out.println(seconds);
-        if (seconds == 0) {
-            JOptionPane.showMessageDialog(this, name);
-        }
     }
     
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
+       
+        seconds -=1;
+        if (seconds == 0) {
+            JOptionPane.showMessageDialog(this, name);
+        }
         
         String secondString = String.format("%02d", seconds);
         
