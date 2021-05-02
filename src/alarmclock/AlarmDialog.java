@@ -13,6 +13,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import javax.swing.*;
 import javax.swing.text.DateFormatter;
 import queuemanager.OrderedLinkedListPriorityQueue;
@@ -114,7 +115,12 @@ public class AlarmDialog extends JDialog implements ActionListener, PropertyChan
                 DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 String dateString = dateFormat.format(spinner.getValue());
                 Date date = (Date)spinner.getValue();
-                int priority = 0 - ((int) ((date.getTime()-parent.model.datetime.getTime())/1000));
+                Calendar calendar = new GregorianCalendar(2020, 1, 1);
+                Date baseline = calendar.getTime();
+                
+//              Note: Could not think of a different way to achieve this. Will cause an integer overflow on February 4th 2088 unless baseline date is updated. 
+//              Might be worth setting an an alarm for February 3rd 2088 as a reminder
+                int priority = 0 - ((int) ((date.getTime()-baseline.getTime())/1000));
                 
                 JOptionPane.showMessageDialog(
                 AlarmDialog.this,
@@ -126,9 +132,6 @@ public class AlarmDialog extends JDialog implements ActionListener, PropertyChan
                 parent.model.addObserver(timer);
                 parent.queue.add(timer, priority);
                 System.out.println(parent.queue);
-                frame.invalidate();
-                frame.validate();
-                frame.repaint();
             }
              else { //user closed dialog or clicked cancel
                 setVisible(false);
