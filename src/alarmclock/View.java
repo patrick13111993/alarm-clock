@@ -44,20 +44,6 @@ public class View {
             model.addObserver(digitalpanel);
             contentPane.add(digitalpanel, BorderLayout.CENTER);        
         }
-        
-        if(!queue.isEmpty()) {
-            BufferedImage myPicture;
-            try {
-                myPicture = ImageIO.read(new File("images/alarm.png"));
-                JLabel picLabel = new JLabel(new ImageIcon(myPicture));
-                picLabel.setPreferredSize(new Dimension(20,20));
-                contentPane.add(picLabel,BorderLayout.LINE_END);
-                System.out.println("where da alarm at");
-            } catch (IOException ex) {
-                Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            
-        }
 
 //        contentPane.add(aboutButton, BorderLayout.PAGE_END);
         
