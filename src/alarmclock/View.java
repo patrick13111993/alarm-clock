@@ -4,11 +4,20 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.*;
+import queuemanager.OrderedLinkedListPriorityQueue;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 
 public class View {
     
     Boolean analog = true;
     Model model;
+    OrderedLinkedListPriorityQueue queue = new OrderedLinkedListPriorityQueue();
+
     
     public View(Model model) {
         this.model = model;
@@ -34,6 +43,20 @@ public class View {
             DigitalClockPanel digitalpanel = new DigitalClockPanel(model);
             model.addObserver(digitalpanel);
             contentPane.add(digitalpanel, BorderLayout.CENTER);        
+        }
+        
+        if(!queue.isEmpty()) {
+            BufferedImage myPicture;
+            try {
+                myPicture = ImageIO.read(new File("images/alarm.png"));
+                JLabel picLabel = new JLabel(new ImageIcon(myPicture));
+                picLabel.setPreferredSize(new Dimension(20,20));
+                contentPane.add(picLabel,BorderLayout.LINE_END);
+                System.out.println("where da alarm at");
+            } catch (IOException ex) {
+                Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
         }
 
 //        contentPane.add(aboutButton, BorderLayout.PAGE_END);

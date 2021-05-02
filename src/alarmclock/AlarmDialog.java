@@ -15,11 +15,14 @@ import java.util.Calendar;
 import java.util.Date;
 import javax.swing.*;
 import javax.swing.text.DateFormatter;
+import queuemanager.OrderedLinkedListPriorityQueue;
+
 
 
 public class AlarmDialog extends JDialog implements ActionListener, PropertyChangeListener {
                     
     private View parent;
+    private Frame frame;
 
     private JOptionPane optionPane;
     private JSpinner spinner;
@@ -30,6 +33,7 @@ public class AlarmDialog extends JDialog implements ActionListener, PropertyChan
 //    Adapted from: https://docs.oracle.com/javase/tutorial/uiswing/examples/components/DialogDemoProject/src/components/CustomDialog.java
     public AlarmDialog(Frame aFrame, View p) {
         super(aFrame, true);
+        frame = aFrame;
         parent = p;
 
         setTitle("Set Alarm");
@@ -110,6 +114,7 @@ public class AlarmDialog extends JDialog implements ActionListener, PropertyChan
                 DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 String dateString = dateFormat.format(spinner.getValue());
                 Date date = (Date)spinner.getValue();
+                int priority = 0 - ((int) ((date.getTime()-parent.model.datetime.getTime())/1000));
                 
                 JOptionPane.showMessageDialog(
                 AlarmDialog.this,
@@ -117,9 +122,13 @@ public class AlarmDialog extends JDialog implements ActionListener, PropertyChan
                 "Alarm set",
                 JOptionPane.INFORMATION_MESSAGE);
                 
-                AlarmTimer timer = new AlarmTimer(date, parent);
+                AlarmTimer timer = new AlarmTimer(date, frame, parent);
                 parent.model.addObserver(timer);
-                timer.setVisible(true);
+                parent.queue.add(timer, priority);
+                System.out.println(parent.queue);
+                frame.invalidate();
+                frame.validate();
+                frame.repaint();
             }
              else { //user closed dialog or clicked cancel
                 setVisible(false);

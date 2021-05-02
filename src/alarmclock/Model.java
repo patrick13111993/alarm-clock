@@ -8,9 +8,6 @@ import java.util.Observable;
 
 public class Model extends Observable {
     
-//    int year = 0;
-//    int month = 0;
-//    int day = 0;
     Date datetime;
     int hour = 0;
     int minute = 0;
