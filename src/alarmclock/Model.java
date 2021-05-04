@@ -4,10 +4,12 @@ import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Observable;
+import queuemanager.OrderedLinkedListPriorityQueue;
 //import java.util.GregorianCalendar;
 
 public class Model extends Observable {
-    
+   
+    OrderedLinkedListPriorityQueue<AlarmTimer> queue = new OrderedLinkedListPriorityQueue();
     Date datetime;
     int hour = 0;
     int minute = 0;

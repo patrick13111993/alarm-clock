@@ -16,8 +16,6 @@ public class View {
     
     Boolean analog = true;
     Model model;
-    OrderedLinkedListPriorityQueue queue = new OrderedLinkedListPriorityQueue();
-
     
     public View(Model model) {
         this.model = model;

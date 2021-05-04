@@ -21,35 +21,40 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
 import javax.swing.text.DateFormatter;
 import queuemanager.OrderedLinkedListPriorityQueue;
+import queuemanager.QueueUnderflowException;
 
 
 
-public class AlarmDialog extends JDialog implements ActionListener, PropertyChangeListener {
+public class EditAlarmDialog extends JDialog implements ActionListener, PropertyChangeListener {
                     
     private View parent;
     private JFrame frame;
 
     private JOptionPane optionPane;
     private JSpinner spinner;
+    private SpinnerDateModel model;
+    private AlarmTimer timer;
+//    index of currently shown alarm in queue
+    int index = 0;
 
-    private String btnString1 = "OK";
-    private String btnString2 = "Cancel";
+    private String btnString1 = "Update";
+    private String btnString2 = "Next";
+    private String btnString3 = "Cancel";
 
-//    Adapted from: https://docs.oracle.com/javase/tutorial/uiswing/examples/components/DialogDemoProject/src/components/CustomDialog.java
-    public AlarmDialog(JFrame aFrame, View p) {
+    public EditAlarmDialog(JFrame aFrame, View p) {
         super(aFrame, true);
         frame = aFrame;
         parent = p;
 
-        setTitle("Set Alarm");
-       
-        Object[] options = {btnString1, btnString2};
+        setTitle("Edit Alarms");
         
-//      Source: https://stackoverflow.com/questions/21960236/jspinner-time-picker-model-editing  
-        SpinnerDateModel model = new SpinnerDateModel();
-        model.setValue(parent.model.datetime);
+        timer = parent.model.queue.getAtIndex(index);
+
+        model = new SpinnerDateModel();
+        model.setValue(timer.datetime);
 
         spinner = new JSpinner(model);
 
@@ -59,16 +64,27 @@ public class AlarmDialog extends JDialog implements ActionListener, PropertyChan
         formatter.setOverwriteMode(true);
 
         spinner.setEditor(editor);
-
-
-        //Create the JOptionPane.
-        optionPane = new JOptionPane(spinner,
-                                    JOptionPane.INFORMATION_MESSAGE,
-                                    JOptionPane.OK_CANCEL_OPTION,
-                                    null,
-                                    options,
-                                    options[0]);
         
+        Object[] options = {btnString1, btnString3};
+        Object[] nextoptions = {btnString1, btnString2, btnString3};
+
+        //Create the JOptionPane. Add a Next button for iteration through queue if multiple alarms exist
+        if((index + 1) == parent.model.queue.length()) {
+            optionPane = new JOptionPane(spinner,
+            JOptionPane.INFORMATION_MESSAGE,
+            JOptionPane.OK_CANCEL_OPTION,
+            null,
+            options,
+            options[0]);  
+        } else {
+            optionPane = new JOptionPane(spinner,
+            JOptionPane.INFORMATION_MESSAGE,
+            JOptionPane.OK_CANCEL_OPTION,
+            null,
+            nextoptions,
+            nextoptions[0]);
+        }
+ 
         optionPane.setValue(spinner.getValue());
         
         //Make this dialog display it.
@@ -129,8 +145,10 @@ public class AlarmDialog extends JDialog implements ActionListener, PropertyChan
                 
                 if(datedifference > 0) {
                 
+                    parent.model.queue.removeAtIndex(index);
+                    
                     JOptionPane.showMessageDialog(
-                        AlarmDialog.this,
+                        EditAlarmDialog.this,
                         "Alarm set for: " + dateString,
                         "Alarm set",
                         JOptionPane.INFORMATION_MESSAGE);
@@ -156,13 +174,26 @@ public class AlarmDialog extends JDialog implements ActionListener, PropertyChan
                     }   
                 } else {
                     JOptionPane.showMessageDialog(
-                    AlarmDialog.this,
+                    EditAlarmDialog.this,
                     "Error: " + dateString + " is not in the future!",
                     "Invalid input",
+                    JOptionPane.ERROR_MESSAGE);
+                }
+            } else if (btnString2 == value) { 
+                index++;
+                if(index == parent.model.queue.length()) {
+                    JOptionPane.showMessageDialog(
+                    EditAlarmDialog.this,
+                    "End of list",
+                    "Information",
                     JOptionPane.INFORMATION_MESSAGE);
+                    index--;
+                } else {
+                    timer = parent.model.queue.getAtIndex(index);
+                    model.setValue(timer.datetime);
                 }
             } else { //user closed dialog or clicked cancel
-            setVisible(false);
+                setVisible(false);
             }
         }
     }

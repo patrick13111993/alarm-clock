@@ -2,6 +2,7 @@ package alarmclock;
 
 import java.awt.event.*;
 import javax.swing.Timer;
+import queuemanager.OrderedLinkedListPriorityQueue;
 
 public class Controller {
     
