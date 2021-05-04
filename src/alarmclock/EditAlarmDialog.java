@@ -51,7 +51,13 @@ public class EditAlarmDialog extends JDialog implements ActionListener, Property
 
         setTitle("Edit Alarms");
         
-        timer = parent.model.queue.getAtIndex(index);
+        try {
+            timer = parent.model.queue.getAtIndex(index);
+        } catch (IndexOutOfBoundsException ex) {
+            Logger.getLogger(EditAlarmDialog.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (QueueUnderflowException ex) {
+            Logger.getLogger(EditAlarmDialog.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
         model = new SpinnerDateModel();
         model.setValue(timer.datetime);
@@ -145,7 +151,13 @@ public class EditAlarmDialog extends JDialog implements ActionListener, Property
                 
                 if(datedifference > 0) {
                 
-                    parent.model.queue.removeAtIndex(index);
+                    try {
+                        parent.model.queue.removeAtIndex(index);
+                    } catch (IndexOutOfBoundsException ex) {
+                        Logger.getLogger(EditAlarmDialog.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (QueueUnderflowException ex) {
+                        Logger.getLogger(EditAlarmDialog.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                     
                     JOptionPane.showMessageDialog(
                         EditAlarmDialog.this,
@@ -189,7 +201,13 @@ public class EditAlarmDialog extends JDialog implements ActionListener, Property
                     JOptionPane.INFORMATION_MESSAGE);
                     index--;
                 } else {
-                    timer = parent.model.queue.getAtIndex(index);
+                    try {
+                        timer = parent.model.queue.getAtIndex(index);
+                    } catch (IndexOutOfBoundsException ex) {
+                        Logger.getLogger(EditAlarmDialog.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (QueueUnderflowException ex) {
+                        Logger.getLogger(EditAlarmDialog.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                     model.setValue(timer.datetime);
                 }
             } else { //user closed dialog or clicked cancel
