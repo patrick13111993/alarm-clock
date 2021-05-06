@@ -3,6 +3,8 @@ package alarmclock;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import javax.swing.*;
 import queuemanager.OrderedLinkedListPriorityQueue;
 import java.awt.image.BufferedImage;
@@ -14,8 +16,8 @@ import javax.imageio.ImageIO;
 
 public class View {
     
-    Boolean analog = true;
     Model model;
+    Boolean analog = true;
     
     public View(Model model) {
         this.model = model;
@@ -45,6 +47,19 @@ public class View {
 
 //        contentPane.add(aboutButton, BorderLayout.PAGE_END);
         
+//        ask user to save alarm data upon application closing
+        frame.addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent e) {
+                int reply = JOptionPane.showConfirmDialog(null, "Save alarms?", "Save before exiting?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+                if (reply == JOptionPane.YES_OPTION) {
+                    CalendarCRUD crud = new CalendarCRUD();
+                    crud.write("test", model);
+                } else {
+                    System.exit(0);
+                }
+            }
+        });
+
         frame.setContentPane(contentPane);
         frame.setTitle("Java Clock");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

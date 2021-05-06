@@ -13,7 +13,10 @@ import java.awt.Graphics2D;
 import java.text.SimpleDateFormat;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JPanel;
+import queuemanager.QueueUnderflowException;
 
 /**
  *
@@ -40,6 +43,18 @@ public class DateDisplay extends JPanel implements Observer {
         Font clockFont = new Font("Sans Serif", Font.BOLD, 32);
         gg.setFont(clockFont);
         gg.drawString(today,12,64); 
+        
+        if(!model.queue.isEmpty()) {
+            try {
+                SimpleDateFormat df2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                Font alarmFont = new Font("Sans Serif", Font.BOLD, 12);
+                gg.setFont(alarmFont);
+                AlarmTimer timer = model.queue.head();
+                gg.drawString("Next Alarm: " + df2.format(timer.datetime), 12, 32);
+            } catch (QueueUnderflowException ex) {
+                Logger.getLogger(DateDisplay.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
  
     @Override

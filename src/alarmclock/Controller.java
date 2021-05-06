@@ -1,6 +1,7 @@
 package alarmclock;
 
 import java.awt.event.*;
+import javax.swing.JOptionPane;
 import javax.swing.Timer;
 import queuemanager.OrderedLinkedListPriorityQueue;
 
@@ -24,7 +25,6 @@ public class Controller {
         
         timer = new Timer(100, listener);
         timer.start();
-        
         
     }
 }
