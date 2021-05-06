@@ -41,8 +41,9 @@ public class EditAlarmDialog extends JDialog implements ActionListener, Property
     int index = 0;
 
     private String btnString1 = "Update";
-    private String btnString2 = "Next";
-    private String btnString3 = "Cancel";
+    private String btnString2 = "Prev";
+    private String btnString3 = "Next";
+    private String btnString4 = "Cancel";
 
     public EditAlarmDialog(JFrame aFrame, View p) {
         super(aFrame, true);
@@ -71,8 +72,8 @@ public class EditAlarmDialog extends JDialog implements ActionListener, Property
 
         spinner.setEditor(editor);
         
-        Object[] options = {btnString1, btnString3};
-        Object[] nextoptions = {btnString1, btnString2, btnString3};
+        Object[] options = {btnString1, btnString4};
+        Object[] nextoptions = {btnString1, btnString2, btnString3, btnString4};
 
         //Create the JOptionPane. Add a Next button for iteration through queue if multiple alarms exist
         if((index + 1) == parent.model.queue.length()) {
@@ -176,6 +177,25 @@ public class EditAlarmDialog extends JDialog implements ActionListener, Property
                     JOptionPane.ERROR_MESSAGE);
                 }
             } else if (btnString2 == value) { 
+                index--;
+                if(index < 0) {
+                    JOptionPane.showMessageDialog(
+                    EditAlarmDialog.this,
+                    "End of list",
+                    "Information",
+                    JOptionPane.INFORMATION_MESSAGE);
+                    index++;
+                } else {
+                    try {
+                        timer = parent.model.queue.getAtIndex(index);
+                    } catch (IndexOutOfBoundsException ex) {
+                        Logger.getLogger(EditAlarmDialog.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (QueueUnderflowException ex) {
+                        Logger.getLogger(EditAlarmDialog.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    model.setValue(timer.datetime);
+                }
+            } else if (btnString3 == value) { 
                 index++;
                 if(index == parent.model.queue.length()) {
                     JOptionPane.showMessageDialog(

@@ -126,13 +126,13 @@ public class CalendarCRUD {
                     
                     String dateString = currentLine.replace("DTSTART:", "");
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd'T'HHmmss'Z'");
-                    sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+                    sdf.setTimeZone(TimeZone.getTimeZone("Europe/London"));
 
                     Date alarmdate = sdf.parse(dateString);
 
                     int priority = 0 - ((int) ((alarmdate.getTime() - baseline.getTime()) / 1000));
                     int datedifference = ((int) ((alarmdate.getTime() - view.model.datetime.getTime()) / 1000));
-                    
+                    System.out.println(alarmdate.toString() + view.model.datetime.toString());
                     if(datedifference > 0) {
                         AlarmTimer timer = new AlarmTimer(alarmdate, frame, view);
                         model.queue.add(timer,priority);

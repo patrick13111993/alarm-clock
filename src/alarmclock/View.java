@@ -19,6 +19,7 @@ public class View {
     
     Model model;
     Boolean analog = true;
+    Boolean initialframe = true;
     CalendarCRUD crud = new CalendarCRUD();
     
     public View(Model model) {
@@ -30,18 +31,22 @@ public class View {
         JFrame frame = new JFrame();
         
 //        Load Ask user to load previous alarms
-        int reply = JOptionPane.showConfirmDialog(null, "Load alarms?", "Load previously saved alarms", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-        
-        if (reply == JOptionPane.YES_OPTION) {
-            try {
-//                open file selector
-                crud.read(model, frame, this);
-            } catch (IOException ex) {
-                Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (ParseException ex) {
-                Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
-            }
+        if(initialframe==true) {
+            initialframe=false;
+            int reply = JOptionPane.showConfirmDialog(null, "Load alarms?", "Load previously saved alarms", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+
+            if (reply == JOptionPane.YES_OPTION) {
+                try {
+    //                open file selector
+                    crud.read(model, frame, this);
+                } catch (IOException ex) {
+                    Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (ParseException ex) {
+                    Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }            
         }
+
 
         frame.setJMenuBar(createMenuBar(frame));
         Container contentPane = frame.getContentPane();
