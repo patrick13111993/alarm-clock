@@ -168,22 +168,6 @@ public class EditAlarmDialog extends JDialog implements ActionListener, Property
                     AlarmTimer timer = new AlarmTimer(alarmdate, frame, parent);
                     parent.model.addObserver(timer);
                     parent.model.queue.add(timer, priority);
-
-    //                Following adapted from: https://stackoverflow.com/questions/299495/how-to-add-an-image-to-a-jpanel
-                    BufferedImage myPicture;
-                    try {
-    //                    Show icon on parent frame when an alarm is set
-                        myPicture = ImageIO.read(new File("images/alarm.png"));
-                        JButton picButton = new JButton (new ImageIcon(myPicture));
-                        picButton.setPreferredSize(new Dimension(40,40));
-                        EditAlarmHandler handler = new EditAlarmHandler(frame, parent);
-                        picButton.addActionListener(handler);
-                        
-                        frame.add(picButton,BorderLayout.LINE_END);
-                        frame.pack();
-                    } catch (IOException ex) {
-                        Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
-                    }   
                 } else {
                     JOptionPane.showMessageDialog(
                     EditAlarmDialog.this,

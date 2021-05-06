@@ -10,6 +10,7 @@ import queuemanager.OrderedLinkedListPriorityQueue;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
@@ -18,6 +19,7 @@ public class View {
     
     Model model;
     Boolean analog = true;
+    CalendarCRUD crud = new CalendarCRUD();
     
     public View(Model model) {
         this.model = model;
@@ -26,6 +28,21 @@ public class View {
     
     public void createFrame(Model model) {
         JFrame frame = new JFrame();
+        
+//        Load Ask user to load previous alarms
+        int reply = JOptionPane.showConfirmDialog(null, "Load alarms?", "Load previously saved alarms", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+        
+        if (reply == JOptionPane.YES_OPTION) {
+            try {
+//                open file selector
+                crud.read(model, frame, this);
+            } catch (IOException ex) {
+                Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ParseException ex) {
+                Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
         frame.setJMenuBar(createMenuBar(frame));
         Container contentPane = frame.getContentPane();
         contentPane.setLayout(new BorderLayout());
@@ -52,13 +69,31 @@ public class View {
             public void windowClosing(WindowEvent e) {
                 int reply = JOptionPane.showConfirmDialog(null, "Save alarms?", "Save before exiting?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
                 if (reply == JOptionPane.YES_OPTION) {
-                    CalendarCRUD crud = new CalendarCRUD();
-                    crud.write("test", model);
+                    crud.write(model);
                 } else {
                     System.exit(0);
                 }
             }
         });
+        
+        System.out.println(model.queue.length());
+        //  Following adapted from: https://stackoverflow.com/questions/299495/how-to-add-an-image-to-a-jpanel
+        if(model.queue.length() > 0) {
+            BufferedImage myPicture;
+            try {
+                //  Show icon on parent frame when an alarm is set
+                myPicture = ImageIO.read(new File("images/alarm.png"));
+                JButton picButton = new JButton(new ImageIcon(myPicture));
+                picButton.setPreferredSize(new Dimension(40, 40));
+                EditAlarmHandler handler = new EditAlarmHandler(frame, this);
+                picButton.addActionListener(handler);
+
+                frame.add(picButton, BorderLayout.LINE_END);
+                frame.pack();
+            } catch (IOException ex) {
+                Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
 
         frame.setContentPane(contentPane);
         frame.setTitle("Java Clock");

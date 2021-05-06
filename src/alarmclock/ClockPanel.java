@@ -12,5 +12,4 @@ import javax.swing.*;
  */
 public abstract class ClockPanel extends JPanel implements Observer {
     
-    
 }
