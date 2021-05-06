@@ -21,6 +21,7 @@ import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.filechooser.FileSystemView;
 import queuemanager.OrderedLinkedListPriorityQueue;
@@ -68,17 +69,14 @@ public class CalendarCRUD {
             }
         }
 
-//        String testExample = "DTSTAMP:19970714T170000Z\r\nORGANIZER;CN=John Doe:MAILTO:john.doe@example.com\r\nDTSTART:19970714T170000Z\r\nDTEND:19970715T035959Z\r\nSUMMARY:Bastille Day Party\r\n";
-            
-//    try {
-
+//              Create file
             File file = new File(builder.toString());
             JFileChooser filechooser = new JFileChooser(file, FileSystemView.getFileSystemView());
-//            filechooser.showOpenDialog(null);
 
         // Source: https://stackoverflow.com/questions/61885015/how-to-allow-the-user-to-choose-save-location-and-filename
         int returnValue = filechooser.showSaveDialog(null);
         if ( returnValue == JFileChooser.APPROVE_OPTION) {
+//            Set file as iCalendar format
             File fileToSave = new File(filechooser.getSelectedFile().toString() + ".ics");
             try{
                 FileWriter fw = new FileWriter(fileToSave.getAbsoluteFile());
@@ -86,6 +84,7 @@ public class CalendarCRUD {
                 bw.write(calBegin);
                 bw.write(version);
                 bw.write(prodid);
+//                Create new event for each alarm in queue
                 for(int i = 0; i < alarms.length; i++) {
                     bw.write(eventBegin);
                     bw.write(alarms[i]);
@@ -105,10 +104,25 @@ public class CalendarCRUD {
     
     public void read(Model model, JFrame frame, View view) throws IOException, FileNotFoundException, ParseException {
         JFileChooser filechooser = new JFileChooser();
+//        Set filetype to iCalendar files
+        filechooser.setFileFilter(new FileFilter() {
+            public String getDescription() {
+                return "iCalendar Documents (*.ics)";
+            }
+
+            public boolean accept(File f) {
+                if (f.isDirectory()) {
+                    return true;
+                } else {
+                    return f.getName().toLowerCase().endsWith(".ics");
+                }
+            }
+        });
+        
         int result = filechooser.showOpenDialog(null);
         
         if (result == JFileChooser.APPROVE_OPTION) {
-            // user selected a file
+//             User selected a file
             String currentLine = "";
             
             File file = filechooser.getSelectedFile();
@@ -116,14 +130,14 @@ public class CalendarCRUD {
             fr = new FileReader(file);
             BufferedReader br = new BufferedReader(fr);
 
+//            Baseline date for calculating priority in queue
             Calendar baselinedate = new GregorianCalendar(2020, 1, 1);
             Date baseline = baselinedate.getTime();
-
-
             
             while((currentLine = br.readLine()) != null) {
                 if(currentLine.contains("DTSTART:")) {
                     
+//                    Create new alarm timer object from saved event start date and add to queue if valid
                     String dateString = currentLine.replace("DTSTART:", "");
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd'T'HHmmss'Z'");
                     sdf.setTimeZone(TimeZone.getTimeZone("Europe/London"));

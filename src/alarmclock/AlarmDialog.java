@@ -121,12 +121,13 @@ public class AlarmDialog extends JDialog implements ActionListener, PropertyChan
                 Calendar baselinedate = new GregorianCalendar(2020, 1, 1);
                 Date baseline = baselinedate.getTime();
                 
-//              NB Could not find a better way to achieve this. Will cause an integer overflow on February 4th 2088 unless baseline date is updated. 
-//              Might be worth setting an an alarm for February 3rd 2088 as a reminder
+//              NB Could not find a better way to achieve this. Will probably cause an integer overflow on February 5th 2088 unless baseline date is updated. 
+//              Potentially worthwhile setting an an alarm for February 4th 2088 as a reminder
                 int priority = 0 - ((int) ((alarmdate.getTime()-baseline.getTime())/1000));
                 
                 int datedifference = ((int) ((alarmdate.getTime()-parent.model.datetime.getTime())/1000));
                 
+//                Create alarm only if time entered is in the future
                 if(datedifference > 0) {
                 
                     JOptionPane.showMessageDialog(

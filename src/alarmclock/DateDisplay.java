@@ -44,8 +44,10 @@ public class DateDisplay extends JPanel implements Observer {
         gg.setFont(clockFont);
         gg.drawString(today,12,64); 
         
+//        Check for alarms
         if(!model.queue.isEmpty()) {
             try {
+//                If alarms exists, display text stating when next alarm will go off
                 SimpleDateFormat df2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 Font alarmFont = new Font("Sans Serif", Font.BOLD, 12);
                 gg.setFont(alarmFont);

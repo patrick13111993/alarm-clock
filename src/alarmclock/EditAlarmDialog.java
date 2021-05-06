@@ -37,7 +37,7 @@ public class EditAlarmDialog extends JDialog implements ActionListener, Property
     private JSpinner spinner;
     private SpinnerDateModel model;
     private AlarmTimer timer;
-//    index of currently shown alarm in queue
+//    Index of currently shown alarm in queue
     int index = 0;
 
     private String btnString1 = "Update";
@@ -52,6 +52,7 @@ public class EditAlarmDialog extends JDialog implements ActionListener, Property
 
         setTitle("Edit Alarms");
         
+//        Get timer from queue at index
         try {
             timer = parent.model.queue.getAtIndex(index);
         } catch (IndexOutOfBoundsException ex) {
@@ -62,7 +63,7 @@ public class EditAlarmDialog extends JDialog implements ActionListener, Property
 
         model = new SpinnerDateModel();
         model.setValue(timer.datetime);
-
+//        Create spinner for selecting date and time
         spinner = new JSpinner(model);
 
         JSpinner.DateEditor editor = new JSpinner.DateEditor(spinner, "yyyy-MM-dd HH:mm:ss");
@@ -72,10 +73,12 @@ public class EditAlarmDialog extends JDialog implements ActionListener, Property
 
         spinner.setEditor(editor);
         
+//        Buttons for if one alarm exists
         Object[] options = {btnString1, btnString4};
+//        Buttons for if multiple alarms exist
         Object[] nextoptions = {btnString1, btnString2, btnString3, btnString4};
 
-        //Create the JOptionPane. Add a Next button for iteration through queue if multiple alarms exist
+//        Create the JOptionPane. Add a Next button for iteration through queue if multiple alarms exist
         if((index + 1) == parent.model.queue.length()) {
             optionPane = new JOptionPane(spinner,
             JOptionPane.INFORMATION_MESSAGE,
@@ -94,10 +97,9 @@ public class EditAlarmDialog extends JDialog implements ActionListener, Property
  
         optionPane.setValue(spinner.getValue());
         
-        //Make this dialog display it.
         setContentPane(optionPane);
 
-        //Handle window closing correctly.
+//        Handle window closing correctly.
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
                 public void windowClosing(WindowEvent we) {
@@ -112,7 +114,7 @@ public class EditAlarmDialog extends JDialog implements ActionListener, Property
             }
         });
 
-        //Register an event handler that reacts to option pane state changes.
+//        Register an event handler that reacts to option pane state changes.
         optionPane.addPropertyChangeListener(this);
     }
 
@@ -130,13 +132,14 @@ public class EditAlarmDialog extends JDialog implements ActionListener, Property
             Object value = optionPane.getValue();
 
             if (value == JOptionPane.UNINITIALIZED_VALUE) {
-                //ignore reset
+//                Ignore reset
                 return;
             }
 
             optionPane.setValue(
                     JOptionPane.UNINITIALIZED_VALUE);
 
+//            User clicked update
             if (btnString1.equals(value)) {
                 DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 String dateString = dateFormat.format(spinner.getValue());
@@ -176,6 +179,7 @@ public class EditAlarmDialog extends JDialog implements ActionListener, Property
                     "Invalid input",
                     JOptionPane.ERROR_MESSAGE);
                 }
+//                User clicked prev
             } else if (btnString2 == value) { 
                 index--;
                 if(index < 0) {
@@ -195,6 +199,7 @@ public class EditAlarmDialog extends JDialog implements ActionListener, Property
                     }
                     model.setValue(timer.datetime);
                 }
+//                User clicked next
             } else if (btnString3 == value) { 
                 index++;
                 if(index == parent.model.queue.length()) {
@@ -214,7 +219,8 @@ public class EditAlarmDialog extends JDialog implements ActionListener, Property
                     }
                     model.setValue(timer.datetime);
                 }
-            } else { //user closed dialog or clicked cancel
+//                User closed dialog or clicked cancel
+            } else { 
                 setVisible(false);
             }
         }

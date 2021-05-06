@@ -22,6 +22,7 @@ class EditAlarmHandler implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent event) {
         
+//        open edit alarm dialogue 
         EditAlarmDialog dialog = new EditAlarmDialog(frame, parent);
         dialog.pack();
         dialog.setLocationRelativeTo(frame);

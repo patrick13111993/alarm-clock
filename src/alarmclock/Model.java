@@ -9,6 +9,7 @@ import queuemanager.OrderedLinkedListPriorityQueue;
 
 public class Model extends Observable {
    
+//    queue containing active alarms
     OrderedLinkedListPriorityQueue<AlarmTimer> queue = new OrderedLinkedListPriorityQueue();
     Date datetime;
     int hour = 0;
@@ -24,6 +25,7 @@ public class Model extends Observable {
     public void update() {
         Calendar date = Calendar.getInstance();
         
+//        get current time
         datetime = date.getTime();
         hour = date.get(Calendar.HOUR);
         minute = date.get(Calendar.MINUTE);

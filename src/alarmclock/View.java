@@ -57,6 +57,7 @@ public class View {
         model.addObserver(datedisplay);
         contentPane.add(datedisplay, BorderLayout.PAGE_END);
         
+//        create analog panel if analog is true, digital panel otherwise
         if (analog) {
             AnalogClockPanel analogpanel = new AnalogClockPanel(model);
             model.addObserver(analogpanel);
@@ -67,14 +68,20 @@ public class View {
             contentPane.add(digitalpanel, BorderLayout.CENTER);        
         }
 
-//        contentPane.add(aboutButton, BorderLayout.PAGE_END);
+//        code from initial about button:
+//        contentPane.add(aboutButton, BorderLayout.PAGE_END); 
         
 //        ask user to save alarm data upon application closing
         frame.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
-                int reply = JOptionPane.showConfirmDialog(null, "Save alarms?", "Save before exiting?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-                if (reply == JOptionPane.YES_OPTION) {
-                    crud.write(model);
+                if(model.queue.length() > 0){
+                    int reply = JOptionPane.showConfirmDialog(null, "Save alarms?", "Save before exiting?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+                    if (reply == JOptionPane.YES_OPTION) {
+//                        create icalendar file
+                        crud.write(model);
+                    } else {
+                        System.exit(0);
+                    }
                 } else {
                     System.exit(0);
                 }
@@ -163,7 +170,7 @@ public class View {
         }  
     } 
     
-    
+//    code for initial about button:
 //    public JButton createAboutButton() {
 //        JButton aboutButton = new JButton("About");
 //        aboutButton.setPreferredSize(new Dimension(200, 100));
